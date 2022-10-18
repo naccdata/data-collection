@@ -61,7 +61,7 @@ The `manifest.json` file for the data might be
             "title": "entity",
             "attributedTo": {
                 "investigator": "AZK",
-                "title: "agent"
+                "title": "agent"
             }
         }
     ]
