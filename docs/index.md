@@ -61,14 +61,14 @@ The `manifest.json` file for the data might be
             "title": "entity",
             "attributedTo": {
                 "investigator": "AZK",
-                "title: "agent",
+                "title: "agent"
             }
         }
     ]
 }
 ```
 
-to capture that the the file was from an interview done by an investigator with initials `AZK`.
+to capture that the the file was from an interview done by an investigator with initials `AZK` .
 
 We will be supporting a metadata format capturing provencance based on the [PROV-DM](https://www.w3.org/TR/prov-dm/), which would allow capturing more detail about how files are created.
 This example is (roughly) based on the [PROV-JSON](https://www.w3.org/Submission/prov-json/) schema, which uses the `"title"` tag to identify the type of object.
