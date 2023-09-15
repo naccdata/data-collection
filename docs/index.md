@@ -19,7 +19,6 @@ adc-[ADCID]/
         └── file_n 
 ```
 
- 
 where `[ADCID]` is the center ADCID, `[PTID]` is the participant ID (or NACCID), and `[DATE]` is a standard representation of the date (e.g., `2022-08-17` ).
 The manifest file should contain metadata for the files, and should be consistently named across the project.
 And, all data files should be stored in the directory for the visit in which they were acquired. 
@@ -45,21 +44,21 @@ Accession numbers can help with tracking of files when they are stored separatel
 
 ## Manifest
 
-We will expect metadata about the visit and the list of files for the visit to be provided in the manifest file. 
+We will expect metadata about the visit and the list of files for the visit to be provided in the manifest file.
 We will be requiring a JSON or YAML file for the metadata on submission. 
 
 The `manifest.json` file for the data might be 
 
 ```json
 {
-    "centerId": "00",
-    "participantId": "1",
-    "visitDate": "2022-08-17",
+    "center_id": "00",
+    "participant_id": "1",
+    "visit_date": "2022-08-17",
     "files": [
         {
             "name": "voice-recording-241.wav",
             "title": "entity",
-            "attributedTo": {
+            "attributed_to": {
                 "investigator": "AZK",
                 "title": "agent"
             }
