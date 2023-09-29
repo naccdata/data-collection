@@ -1,141 +1,138 @@
-# NACC Data Collection
+# NACC Data Collection Requirements and Recommendations
 
-These are recommendations for management of files that contains non-form data collected during a visit of a participant.
+This is a reference for projects that are planning on submitting new data types to NACC.
 
-## Forms
+## Requirements on Data Format
 
-Data from forms, UDS and otherwise, are submitted to NACC in a tabular format.
-Each UDS form has a header that has metadata describing the data
+NACC is able to accept and manage files in any format provided there are tools available for
 
-- Form ID (implicit)
-- Center ID
-- Participant ID
-- Visit number
-- Date of form completion
-- Investigator initials
-- Language used during visit
-- Mode of completion
-  - in person
-  - remote -- phone or video, with reason
-  - not completed, with reason
+1. QC of submitted files.
+   If you are making a proposal to submit data, you should be able to provide software or schema that support QC checks of data files.
+   NACC also needs to be able to maintain or rely on maintained software implementations or schema definitions.
 
-This data identifies 
+2. manipulation of the data, either by NACC to derive data for release, or for analysis by external researchers, if the raw data may be released as is.
 
-- which participant the data applies to (Participant ID)
-- attributes of the data collection
-  - where (Center ID)
-  - when the data was collected (Visit number, Date of completion)
-  - who collected the data (investigator)
-  - how the data was collected: language and mode
+## Requirements on Metadata
 
-Non-form data should similarly have metadata that describes what the data represents and how it was collected.
+Data should be accompanied with metadata that describes the following concepts
 
-## Non-form data
+|Concept|Description|
+|-------|-----------|
+|Study|The research activity for which data was collected|
+|Center|The site where data was collected|
+|Observer|The person who collected the data|
+|Participant|The person observed to collect the data|
+|Visit|The participant's visit to the center for data collection|
+|Acquisition|The activity that collected the data|
+|Instrument|The instrument/mechanism used to collect data|
 
-### Identifying participants
+The goal of the metadata is to describe the provenance of the data (how the data was collected and what has been done to it since), but minimally the metadata should define the following
 
-### Identifying data
+- center id
+- participant id
+- visit number
+- acquisition attributes
+- instrument id
+- observer identification
 
-### 
+See the discussion about [metadata](metadata.md) for more details.
 
+The exact expectations can be adjusted based on how the data is collected
 
+### Expectations on Participant IDs
 
+ADRC participants can be identified by the ADCID (NACC assigned center ID) with the ADRC assigned participant ID, the NACCID, or the NIA GUID.
 
+### Expectations on Dates
+
+Dates should be given in the form year-month-day with month and day zero padded; e.g.,`20220817`. Which follows [RFC3339](https://datatracker.ietf.org/doc/html/rfc3339), and matches `%Y%m%d`.
+
+### Expectations on File naming
+
+When data is separated from metadata, data files should be given accession numbers to allow a unique mapping from identifying information to the file.
+
+### On identifying studies
+
+Much of the data that is collected by NACC is for the ADRC program, and the study hasn't historicially been captured within the data.
+We assume that data is submitted in the context of a particular study and so the study can be understood.
+
+However, the study is a short-hand for the participant consent with subsequent limitations on use.
+If your data requires different consent than the ADRC program, the study should be identified.
+
+### Manifest format
+
+We will be supporting a metadata format capturing provenance based on the [PROV-DM](https://www.w3.org/TR/prov-dm/), which would allow capturing more detail about how files are created.
 
 ## File Organization
 
-NACC ultimately organizes all data coming from a center in a hierarchy: center, participant, visit.
+NACC ultimately stores data using the following hierarchy relative to the concepts above
+
+```bash
+Center
+└── Study
+    └── Participant
+        └── Visit
+            └── Acquisition
+                └── Data
+```
+
 Using a file structure matching this hierarchy will mean fewer transformations when the data is submitted.
-However, data that naturally convert to a tabular form could be submitted using a CSV format.
 
-### Hierarchical organization
+We will support data to be submitted using one of these organizations:
 
-A directory structure matching the data hierarchy would look like:
+1. Hierarchical - files are organized by the full hierarchy above
+2. Tabular metadata - files are stored independently with accession numbers, with metadata in tabular form
+3. Tabular data - data and metadata are stored in tabular form
+
+### Hierarchical
+
+A fully hierarchical organization can be used in a situation where data is captured as individual files from an acquisition within a visit.
+In this case, the full hierarchy is elaborated with a `manifest.json` file containing the metadata.
+An example of the hierarchical structure where  there are multiple voice recordings is
 
 ```bash
 adc-[ADCID]/ 
-└── ptid-[PTID]/ 
-    └── visit-[DATE]/ 
-        ├── manifest.json 
-        ├── file_1 
-        ...
-        └── file_n 
+└── study-[NAME]/ 
+    └── ptid-[PTID]/ 
+      └── visit-[DATE]/ 
+          └── acquisition-[ID]/
+              ├── manifest.json 
+              ├── voice-recording-241.wav 
+              ...
+              └── voice-recording-735.wav 
 ```
 
-where `[ADCID]` is the center ADCID, `[PTID]` is the participant ID (or NACCID), and `[DATE]` is in [RFC3339](https://datatracker.ietf.org/doc/html/rfc3339) date format as `%Y%m%d` (year-month-day with month and day zero padded); e.g., `20220817`.
-The manifest file should contain metadata for the files, and should be consistently named across the project.
-And, all data files should be stored in the directory for the visit in which they were acquired.
-For example, for a visit where a voice recording is captured, the file might be
+where `[ADCID]` is the center ADCID, `[PTID]` is the ADRC assigned participant ID, and `[DATE]` is an [RFC3339](https://datatracker.ietf.org/doc/html/rfc3339) format date as described above.
+The PTID could be swapped out for one of the other participant IDs discussed above.
+
+### Tabular metadata
+
+An alternative to the hierarchical organization is to put the metadata in tabular form, which references the data files.
 
 ```bash
-adc-00/ 
-└── ptid-1/ 
-    └── visit-20220817/ 
-        ├── manifest.json 
-        └── voice-recording-241.wav 
+adc-[ADCID]/ 
+└── study-[NAME]/ 
+    ├── manifest.csv 
+    └── files/
+        ├── voice-recording-241.wav 
+        ...
+        └── voice-recording-735.wav 
 ```
 
-In this example, there is one data file named `voice-recording-241.wav` .
-This data file name indicates the type of data and includes an accession number that uniquely identifies the file.
-(This is to avoid confusion among multiple files named `voice-recording.wav`.)
+### Organization for tabular data
 
-We suggest using a naming scheme that gives readable short file names that describe the type of content and include a unique accession number.
-Having short meaningful names will help when viewing data in a directory.
+Alternatively, when the data is tabular, metadata may also be integrated as columns in the data file.
 
-The `manifest.json` file for the data might be 
-
-```json
-{
-    "center_id": "00",
-    "participant_id": "1",
-    "visit_date": "2022-08-17",
-    "files": [
-        {
-            "name": "voice-recording-241.wav",
-            "title": "entity",
-            "attributed_to": {
-                "investigator": "AZK",
-                "title": "agent"
-            }
-        }
-    ]
-}
+```bash
+adc-[ADCID]/ 
+└── participant-data-00129.csv
 ```
 
-### Tabular organization
+This should generally not be done if the file is exported from an instrument such as for biomarker analysis.
+In this case, a separate manifest file should be used to avoid the metadata being deleted by exports from the instrument.
 
-NACC can also accept data stored in a 
+> Data that is capture using REDCap can be handled in different ways
 
-## Accession numbers
-Accession numbers help with tracking of files when they are stored separately from the metadata, which might be desirable to avoid storing files in proximity of identifying information.
+## Data Submission
 
-
-## Manifest
-
-We will expect metadata about the visit and the list of files for the visit to be provided in the manifest file.
-We will be requiring a JSON or YAML file for the metadata on submission. 
-
-The `manifest.json` file for the data might be 
-
-```json
-{
-    "center_id": "00",
-    "participant_id": "1",
-    "visit_date": "2022-08-17",
-    "files": [
-        {
-            "name": "voice-recording-241.wav",
-            "title": "entity",
-            "attributed_to": {
-                "investigator": "AZK",
-                "title": "agent"
-            }
-        }
-    ]
-}
-```
-
-to capture that the the file was from an interview done by an investigator with initials `AZK` .
-
-We will be supporting a metadata format capturing provencance based on the [PROV-DM](https://www.w3.org/TR/prov-dm/), which would allow capturing more detail about how files are created.
-This example is (roughly) based on the [PROV-JSON](https://www.w3.org/Submission/prov-json/) schema, which uses the `"title"` tag to identify the type of object.
+We expect most data submissions will be handled by upload to an AWS S3 bucket.
