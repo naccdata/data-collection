@@ -41,7 +41,7 @@ This sentence has the following concepts
 |Visit|Activity|The participant's visit to the center for data collection|
 |Acquisition|Activity|An individual collection of data|
 |Instrument|Entity|The instrument/mechanism used to collect data|
-|Data|Entity|The data collected by an acquisition
+|Data|Entity|The data collected by an acquisition|
 
 And, mapping to the PROV-DM model we get the following class diagram
 
@@ -143,21 +143,8 @@ Center
                 └── Data
 ```
 
-So, minimally, we need the information to derive this relationship for particular data.
-
-### On identifying studies
-
-Much of the data that is collected by NACC is for the ADRC program, and the study hasn't historicially been captured within the data.
-We assume that data is submitted in the context of a particular study and so the study can be understood.
-
-However, the study is a short-hand for the participant consent with subsequent limitations on use.
-If your data requires different consent than the ADRC program, the study should be identified.
-
-### Tabular data
-
-In the case of tabular data, a center will submit to a particular study.
-There is effectively no context to the file because we need the data for participants in one file.
-So, the expected metadata columns for tabular data are the following:
+So, minimally, we need the information to derive these relationships for particular data submitted.
+And so, the expected metadata columns for tabular data are the following:
 
 - center id
 - participant id
@@ -167,41 +154,6 @@ So, the expected metadata columns for tabular data are the following:
 - observer identification
 
 Note that there could be adjustments to the columns as noted above to match the details of how data collections could be described.
-
-### Data blobs with tabular metadata
-
-If the data is a "blob" that requires specialized software to use, the metadata will have to be outside of the data file(s).
-In the case where it is appropriate for data files to be kept separate from the metadata, the files can be stored in a particular directory with the metadata in a tabular form that is submitted as a `manifest.csv` file.
-
-This tabular data would include the columns above plus a reference to the data files in each row.
-
-### Data blobs with acquisition level metadata
-
-If the data is a "blob" that requires specialized software to use, the metadata will have to be outside of the data file(s).
-If metadata can be stored with the data files for an acquisition, the metadata should be stored in a `manifest.json` file.
-
-A draft `manifest.json` might look like:
-
-```json
-{
-    "center_id": "00",
-    "participant_id": "1",
-    "visit_date": "2022-08-17",
-    "files": [
-        {
-            "name": "voice-recording-241.wav",
-            "title": "entity",
-            "attributed_to": {
-                "investigator": "AZK",
-                "title": "agent"
-            }
-        }
-    ]
-}
-```
-
-We expect to provide JSON schema for these files as need arises, so let NACC know if you need the schema.
-This example is (roughly) based on the [PROV-JSON](https://www.w3.org/Submission/prov-json/) schema, which uses the `"title"` tag to identify the type of object.
 
 ## Additional provenance
 
