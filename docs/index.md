@@ -7,8 +7,8 @@ This is a reference for projects that are planning on submitting new data types 
 NACC is able to accept and manage files in any format provided there are tools available for
 
 1. QC of submitted files.
-   If you are making a proposal to submit data, you should be able to provide software or schema that support QC checks of data files.
-   NACC also needs to be able to maintain or rely on maintained software implementations or schema definitions.
+   If you are making a proposal to submit data, you need to be able to provide software or schema that support QC checks of data files.
+   NACC needs to be able to maintain or rely on maintained software implementations or schema definitions.
 
 2. manipulation of the data, either by NACC to derive data for release, or for analysis by external researchers, if the raw data may be released as is.
 
@@ -18,15 +18,15 @@ Data should be accompanied with metadata that describes the following concepts
 
 |Concept|Description|
 |-------|-----------|
-|Study|The research activity for which data was collected|
-|Center|The site where data was collected|
+|Study|The research activity for which data were collected|
+|Center|The site where data were collected|
 |Observer|The person who collected the data|
 |Participant|The person observed to collect the data|
 |Visit|The participant's visit to the center for data collection|
 |Acquisition|The activity that collected the data|
 |Instrument|The instrument/mechanism used to collect data|
 
-The goal of the metadata is to describe the provenance of the data (how the data was collected and what has been done to it since), but minimally the metadata should define the following
+The goal of the metadata is to describe the provenance of the data (how the data were collected and what has been done to it since), but minimally the metadata should define the following
 
 - center id
 - participant id
@@ -37,29 +37,29 @@ The goal of the metadata is to describe the provenance of the data (how the data
 
 See the discussion about [metadata](metadata.md) for more details.
 
-The exact expectations can be adjusted based on how the data is collected
+The exact expectations can be adjusted based on how the data are collected.
 
 ### Expectations on Participant IDs
 
-ADRC participants can be identified by the ADCID (NACC assigned center ID) with the ADRC assigned participant ID, the NACCID, or the NIA GUID.
+ADRC participants can be identified by the ADCID (NACC assigned center ID) with the ADRC assigned participant ID, the NACC ID, or the NIA GUID.
 
 ### Expectations on Dates
 
 Dates should be given in the form year-month-day with month and day zero padded; e.g.,`20220817`. Which follows [RFC3339](https://datatracker.ietf.org/doc/html/rfc3339), and matches `%Y%m%d`.
 
-### Expectations on File naming
+### Expectations on File Naming
 
-When data is separated from metadata, data files should be given accession numbers to allow a unique mapping from identifying information to the file.
+When data are separated from metadata, data files should be given accession numbers to allow a unique mapping from identifying information to the file.
 
-### On identifying studies
+### On Identifying Studies
 
-Much of the data that is collected by NACC is for the ADRC program, and the study hasn't historicially been captured within the data.
-We assume that data is submitted in the context of a particular study and so the study can be understood.
+Much of the data that are collected by NACC is for the ADRC program, and the study hasn't historicially been captured within the data.
+We assume that data are submitted in the context of a particular study and so the study can be understood.
 
 However, the study is a short-hand for the participant consent with subsequent limitations on use.
 If your data requires different consent than the ADRC program, the study should be identified.
 
-### Manifest format
+### Manifest Format
 
 We will be supporting a metadata format capturing provenance based on the [PROV-DM](https://www.w3.org/TR/prov-dm/), which would allow capturing more detail about how files are created.
 
@@ -76,7 +76,7 @@ Center
                 └── Data
 ```
 
-Using a file structure matching this hierarchy will mean fewer transformations when the data is submitted.
+Using a file structure matching this hierarchy will mean fewer transformations when the data are submitted.
 
 We will support data to be submitted using one of these organizations:
 
@@ -86,7 +86,7 @@ We will support data to be submitted using one of these organizations:
 
 ### Hierarchical
 
-A fully hierarchical organization can be used in a situation where data is captured as individual files from an acquisition within a visit.
+A fully hierarchical organization can be used in a situation where data are captured as individual files from an acquisition within a visit.
 In this case, the full hierarchy is elaborated with a `manifest.json` file containing the metadata.
 An example of the hierarchical structure where  there are multiple voice recordings is
 
@@ -105,7 +105,7 @@ adc-[ADCID]/
 where `[ADCID]` is the center ADCID, `[PTID]` is the ADRC assigned participant ID, and `[DATE]` is an [RFC3339](https://datatracker.ietf.org/doc/html/rfc3339) format date as described above.
 The PTID could be swapped out for one of the other participant IDs discussed above.
 
-### Tabular metadata
+### Tabular Metadata
 
 An alternative to the hierarchical organization is to put the metadata in tabular form, which references the data files.
 
@@ -119,9 +119,9 @@ adc-[ADCID]/
         └── voice-recording-735.wav 
 ```
 
-### Organization for tabular data
+### Organization for Tabular Data
 
-Alternatively, when the data is tabular, metadata may also be integrated as columns in the data file.
+Alternatively, when the data are tabular, metadata may also be integrated as columns in the data file.
 
 ```bash
 adc-[ADCID]/ 
@@ -131,7 +131,7 @@ adc-[ADCID]/
 This should generally not be done if the file is exported from an instrument such as for biomarker analysis.
 In this case, a separate manifest file should be used to avoid the metadata being deleted by exports from the instrument.
 
-> Data that is capture using REDCap can be handled in different ways
+> Data that is captured using REDCap can be handled in different ways.
 
 ## Data Submission
 
